@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from .forms import ContactForm
 from django.core.mail import send_mail, EmailMessage
 from django.contrib import messages
+from django.conf import settings
+import time
 
 # Create your views here.
 
@@ -16,17 +18,24 @@ def index(request):
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             body = f"Message from: {name}\n{message}"
-            
+            email_from = settings.EMAIL_HOST_USER
             print(f"{email}\n{subject}\n{body}\n")
-
-            send_mail(
-                subject,
-                body,
-                email,
-                ['amaechijude178@gmail.com'],
-            )
-            messages.info(request, "Form submited")
-            return redirect('index')
+            time.sleep(5)
+            try:
+                send_mail(
+                    subject,
+                    body,
+                     email_from,
+                    [email],
+                    #fail_silently=False
+                )
+            
+                messages.info(request, "Form submited")
+                return redirect('index')
+            except TimeoutError:
+                messages.info(request, "TimeoutError")
+                return redirect('index')
+                
 
         messages.info(request, "Form not valid")
         return redirect('index')
