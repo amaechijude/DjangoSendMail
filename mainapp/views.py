@@ -5,8 +5,8 @@ from django.core.mail import send_mail, EmailMessage
 from django.contrib import messages
 from django.conf import settings
 import time
-from allauth.account.views import login, signup
 
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 
@@ -44,7 +44,7 @@ def index(request):
         
         form = ContactForm()
         return render(request, 'index.html', {"form": form})
-    return redirect(login)
+    return redirect('login_user')
 
 def signup(request):
     if request.method == 'POST':
@@ -61,3 +61,27 @@ def signup(request):
         return redirect('signup')
     form = SignupForm()
     return render(request, 'signup.html', {"form":form,})
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password1']
+
+        user = authenticate(username=username, password=password)
+        
+        if user != None:
+            login(request, user)
+            messages.info(request, 'You are logged in')
+            return redirect('home')
+        else:
+            messages.info(request, 'Profile not found')
+            return redirect('login_user')
+    else:
+        return render(request, 'login.html')
+
+#log out   
+def logout_user(request):
+    if request.user.is_authenticated:
+        logout(request)
+        return redirect('login_user')
+    return redirect('login_user')
