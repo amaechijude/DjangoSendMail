@@ -12,6 +12,15 @@
         alert("{{ m }}");
     </script>
     {% endfor %}
+    <nav>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'account_logout' %}">Log out</a>
+        <a href="/">Home</a>
+        {% else %}
+        <a href="/">Home</a>
+        {% endif %}
+    
+    </nav>
     <form action="." method="post">
         {% csrf_token %}
         {{ form.as_p }}
