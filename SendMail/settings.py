@@ -147,6 +147,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 # Allauth config
 SITE_ID = 1
 LOGIN_REDIRECT_URL = "/"
+LOGIN_TEMPLATE = "/login_url"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 
@@ -159,19 +160,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Provider specific settings
+
 SOCIALACCOUNT_PROVIDERS = {
     config('SOCIAL_ACCOUNT'): {
-        # For each provider, you can choose whether or not the
-        # email address(es) retrieved from the provider are to be
-        # interpreted as verified.
-        "VERIFIED_EMAIL": True,
-
-        "APPS": [
-            {
-                "client_id": config('CLIENT_ID'),
-                "secret": config('CLIENT_SECRET'),
-                "key": ""
-            },
-        ],
+        'CLIENT_ID': config('CLIENT_ID'),  # Replace with your client ID
+        'CLIENT_SECRET': config('CLIENT_SECRET'),  # Replace with your client secret
     }
 }

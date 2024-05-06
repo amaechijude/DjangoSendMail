@@ -6,9 +6,9 @@ from django.contrib import messages
 from django.conf import settings
 import time
 
-from django.contrib.auth import authenticate, login, logout
+#from django.contrib.auth import authenticate, login, logout
 # Create your views here.
-
+from allauth.account.views import login
 
 def index(request):
     if request.user.is_authenticated:
@@ -44,7 +44,7 @@ def index(request):
         
         form = ContactForm()
         return render(request, 'index.html', {"form": form})
-    return redirect('login_user')
+    return redirect(login)
 
 def signup(request):
     if request.method == 'POST':
@@ -77,7 +77,7 @@ def login_user(request):
             messages.info(request, 'Profile not found')
             return redirect('login_user')
     else:
-        return render(request, 'login.html')
+        return render(request, 'base.html')
 
 #log out   
 def logout_user(request):
