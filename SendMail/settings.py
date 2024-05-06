@@ -146,6 +146,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
 # Allauth config
 SITE_ID = 1
+ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URL = "/"
 LOGIN_TEMPLATE = "/login_url"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
@@ -162,7 +163,7 @@ AUTHENTICATION_BACKENDS = [
 # Provider specific settings
 
 SOCIALACCOUNT_PROVIDERS = {
-    config('SOCIAL_ACCOUNT'): {
+    'github': {
         'CLIENT_ID': config('CLIENT_ID'),  # Replace with your client ID
         'CLIENT_SECRET': config('CLIENT_SECRET'),  # Replace with your client secret
     }

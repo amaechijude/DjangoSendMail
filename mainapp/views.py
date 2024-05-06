@@ -9,6 +9,7 @@ import time
 #from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 from allauth.account.views import login
+from allauth.socialaccount.views import ConnectionsView
 
 def index(request):
     if request.user.is_authenticated:
@@ -44,7 +45,7 @@ def index(request):
         
         form = ContactForm()
         return render(request, 'index.html', {"form": form})
-    return redirect(login)
+    return redirect('login_user')
 
 def signup(request):
     if request.method == 'POST':
