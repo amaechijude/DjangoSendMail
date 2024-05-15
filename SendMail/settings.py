@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     #custom app
     'mainapp',
 
+    #chat
+    'channels',
+    'daphne',
+
     #third party
     'allauth',
     'allauth.account',
