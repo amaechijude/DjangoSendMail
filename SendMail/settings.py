@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #chat
+    'channels',
+    'daphne',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,10 +45,6 @@ INSTALLED_APPS = [
 
     #custom app
     'mainapp',
-
-    #chat
-    'channels',
-    'daphne',
 
     #third party
     'allauth',
@@ -72,7 +72,7 @@ ROOT_URLCONF = 'SendMail.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,6 +86,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'SendMail.wsgi.application'
+
+#ASGI
+ASGI_APPLICATION = 'SendMail.asgi.application'
 
 
 # Database

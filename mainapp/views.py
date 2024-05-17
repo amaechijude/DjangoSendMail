@@ -12,40 +12,41 @@ from allauth.account.views import login
 from allauth.socialaccount.views import ConnectionsView
 
 def index(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            form = ContactForm(request.POST)
-            if form.is_valid():
-                name = form.cleaned_data['name']
-                email = form.cleaned_data['email']
-                subject = form.cleaned_data['subject']
-                message = form.cleaned_data['message']
-                body = f"Message from: {name}\n{message}"
-                email_from = settings.EMAIL_HOST_USER
-                print(f"{email}\n{subject}\n{body}\n")
-                time.sleep(5)
-                try:
-                    send_mail(
-                        subject,
-                        body,
-                        email_from,
-                        [email],
-                        #fail_silently=False
-                    )
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            body = f"Message from: {name}\n{message}"
+            email_from = settings.EMAIL_HOST_USER
+            print(f"{email}\n{subject}\n{body}\n")
+            time.sleep(5)
+            try:
+                send_mail(
+                    subject,
+                    body,
+                    email_from,
+                    [email],
+                    #fail_silently=False
+                )
+            
+                messages.info(request, "Form submited")
+                return redirect('index')
+            except TimeoutError:
+                messages.info(request, "TimeoutError")
+                return redirect('index')
                 
-                    messages.info(request, "Form submited")
-                    return redirect('index')
-                except TimeoutError:
-                    messages.info(request, "TimeoutError")
-                    return redirect('index')
-                    
 
-            messages.info(request, "Form not valid")
-            return redirect('index')
-        
-        form = ContactForm()
-        return render(request, 'index.html', {"form": form})
-    return redirect('login_user')
+        messages.info(request, "Form not valid")
+        return redirect('index')
+    
+    form = ContactForm()
+    return render(request, 'index.html', {"form": form})
+
+def room(request, room_name):
+    return render(request, 'room.html', {"room_name": room_name})
 
 def signup(request):
     if request.method == 'POST':
@@ -78,7 +79,7 @@ def login_user(request):
             messages.info(request, 'Profile not found')
             return redirect('login_user')
     else:
-        return render(request, 'base.html')
+        return render(request, 'login.html')
 
 #log out   
 def logout_user(request):
