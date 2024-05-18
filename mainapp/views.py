@@ -1,15 +1,74 @@
 from django.shortcuts import render, redirect
 
-from .forms import ContactForm, SignupForm
+from .forms import * #ContactForm, SignupForm, Lo
 from django.core.mail import send_mail, EmailMessage
 from django.contrib import messages
 from django.conf import settings
 import time
-
+from django.contrib.auth import login, logout, authenticate
 #from django.contrib.auth import authenticate, login, logout
 # Create your views here.
-from allauth.account.views import login
-from allauth.socialaccount.views import ConnectionsView
+#from allauth.account.views import login
+#from allauth.socialaccount.views import ConnectionsView
+
+def index(request):
+    if request.user.is_authenticated:
+        return render(request, 'index.html')
+
+    return redirect('login_user')
+
+#def room(request, room_name):
+ #   return render(request, 'room.html', {"room_name": room_name})
+
+def room(request, recipient_username):
+    if request.user.is_authenticated:
+        context = {
+            'recipient_username': recipient_username,
+
+        }
+        return render(request, 'room.html', context)
+    return redirect('login_user')
+    
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+        messages.info(request, 'Error')
+        return redirect('signup')
+    form = SignupForm()
+    return render(request, 'signup.html', {"form":form,})
+
+def login_user(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            user = authenticate(username=username, password=password)
+        
+            if user != None:
+                login(request, user)
+                messages.info(request, 'You are logged in')
+                return redirect('index')
+            else:
+                messages.info(request, 'Profile not found')
+                return redirect('login_user')
+    form = LoginForm()
+    return render(request, 'login.html', {"form":form})
+
+#log out   
+def logout_user(request):
+    if request.user.is_authenticated:
+        logout(request)
+        return redirect('login_user')
+    return redirect('login_user')
+
+
+"""
 
 def index(request):
     if request.method == 'POST':
@@ -45,45 +104,4 @@ def index(request):
     form = ContactForm()
     return render(request, 'index.html', {"form": form})
 
-def room(request, room_name):
-    return render(request, 'room.html', {"room_name": room_name})
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            form.save(commit=False)
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            form.save(commit=True)
-            new_user = authenticate(username=username, password=password)
-            login(request, new_user)
-            return redirect('index')
-        messages.info(request, 'Error')
-        return redirect('signup')
-    form = SignupForm()
-    return render(request, 'signup.html', {"form":form,})
-
-def login_user(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password1']
-
-        user = authenticate(username=username, password=password)
-        
-        if user != None:
-            login(request, user)
-            messages.info(request, 'You are logged in')
-            return redirect('home')
-        else:
-            messages.info(request, 'Profile not found')
-            return redirect('login_user')
-    else:
-        return render(request, 'login.html')
-
-#log out   
-def logout_user(request):
-    if request.user.is_authenticated:
-        logout(request)
-        return redirect('login_user')
-    return redirect('login_user')
+"""
