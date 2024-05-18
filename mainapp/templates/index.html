@@ -19,6 +19,46 @@
     </div>
 </div>
 
+<script>
+    const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/{{ recipient_username }}/');
+
+    document.querySelector('#chat-input').addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') {
+                const messageInput = document.querySelector('#chat-input');
+                const message = messageInput.value;
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInput.value = '';
+            }
+        });
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const message = data['message'];
+            const sender = data['sender'];
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            const messageContent = document.createElement('span');
+
+            if (sender === "{{ request.user.username }}") {
+
+                messageElement.classList.add('mb-2', 'flex', 'justify-end');
+                messageContent.classList.add('p-3', 'rounded-md', 'bg-indigo-600', 'text-white');
+            } else {
+
+                messageElement.classList.add('mb-2', 'flex', 'justify-start');
+                messageContent.classList.add('p-3', 'rounded-md', 'bg-gray-300', 'text-gray-900');
+            }
+       
+            messageContent.textContent = `[${sender}]: ${message}`;
+            messageElement.appendChild(messageContent);
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+        
+</script>
+
 
 <!--<!DOCTYPE html>
 <html>
