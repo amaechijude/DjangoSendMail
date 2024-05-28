@@ -11,26 +11,16 @@ from django.contrib.auth import login, logout, authenticate
 #from allauth.account.views import login
 #from allauth.socialaccount.views import ConnectionsView
 
-def index(request, recipient_username):
-    if request.user.is_authenticated:
-        context = {
-            'recipient_username': recipient_username,
-        }
-        return render(request, 'index.html', context)
-    return redirect('login_user')
 
-#def room(request, room_name):
- #   return render(request, 'room.html', {"room_name": room_name})
+# def room(request, recipient_username):
+#     if request.user.is_authenticated:
+#         recipient_username = request.user.username
+#         context = {
+#             'recipient_username': recipient_username,
 
-def room(request, recipient_username):
-    if request.user.is_authenticated:
-        recipient_username = request.user.username
-        context = {
-            'recipient_username': recipient_username,
-
-        }
-        return render(request, 'room.html', context)
-    return redirect('login_user')
+#         }
+#         return render(request, 'room.html', context)
+#     return redirect('login_user')
     
 def signup(request):
     if request.method == 'POST':
@@ -71,9 +61,12 @@ def logout_user(request):
     return redirect('login_user')
 
 
-"""
-
 def index(request):
+    form = ContactForm()
+    return render(request, 'index.html', {"form": form})
+
+
+def sendmail(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -103,8 +96,3 @@ def index(request):
 
         messages.info(request, "Form not valid")
         return redirect('index')
-    
-    form = ContactForm()
-    return render(request, 'index.html', {"form": form})
-
-"""

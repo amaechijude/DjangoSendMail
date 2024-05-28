@@ -33,8 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     #chat
-    'channels',
-    'daphne',
+    # 'channels',
+    # 'daphne',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,13 +56,13 @@ INSTALLED_APPS = [
 ]
 
 #ASGI
-ASGI_APPLICATION = 'SendMail.asgi.application'
+# #ASGI_APPLICATION = 'SendMail.asgi.application'
 
-CHANNEL_LAYERS = {
-	"default": {
-		"BACKEND": "channels.layers.InMemoryChannelLayer"
-	}
-}
+# CHANNEL_LAYERS = {
+# 	"default": {
+# 		"BACKEND": "channels.layers.InMemoryChannelLayer"
+# 	}
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
