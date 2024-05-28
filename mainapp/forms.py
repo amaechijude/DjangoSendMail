@@ -8,6 +8,9 @@ class SignupForm(UserCreationForm):
         model = User
         fields = ['username', 'email']
 
+class LoginForm(forms.Form):
+    username = forms.CharField(required=True)
+    password = forms.CharField(required=True, widget=forms.PasswordInput)
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=50)
     email = forms.EmailField()

@@ -23,3 +23,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     
 ]
+#https://pythonguides.com/how-to-build-chat-app-in-django/
+

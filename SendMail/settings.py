@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #chat
+    'channels',
+    'daphne',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +55,15 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
 ]
 
+#ASGI
+ASGI_APPLICATION = 'SendMail.asgi.application'
+
+CHANNEL_LAYERS = {
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer"
+	}
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -68,7 +81,7 @@ ROOT_URLCONF = 'SendMail.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,7 +159,9 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
 # Allauth config
 SITE_ID = 1
+ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URL = "/"
+LOGIN_TEMPLATE = "/login_url"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 
@@ -159,19 +174,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Provider specific settings
-SOCIALACCOUNT_PROVIDERS = {
-    config('SOCIAL_ACCOUNT'): {
-        # For each provider, you can choose whether or not the
-        # email address(es) retrieved from the provider are to be
-        # interpreted as verified.
-        "VERIFIED_EMAIL": True,
 
-        "APPS": [
-            {
-                "client_id": config('CLIENT_ID'),
-                "secret": config('CLIENT_SECRET'),
-                "key": ""
-            },
-        ],
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'CLIENT_ID': config('CLIENT_ID'),  # Replace with your client ID
+        'CLIENT_SECRET': config('CLIENT_SECRET'),  # Replace with your client secret
     }
 }
