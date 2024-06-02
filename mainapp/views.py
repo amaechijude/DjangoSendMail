@@ -22,7 +22,44 @@ from django.contrib.auth import login, logout, authenticate
 #         return render(request, 'room.html', context)
 #     return redirect('login_user')
     
-def signup(request):
+
+def index(request):
+    form = ContactForm()
+    return render(request, 'index.html', {"form": form})
+
+
+def sendmail(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            body = f"Message from: {name}\n{message}"
+            email_from = "amaechijude178@gmail.com"#settings.EMAIL_HOST_USER
+            print(f"{email}\n{subject}\n{body}\n")
+            time.sleep(5)
+            try:
+                send_mail(
+                    subject,
+                    body,
+                    email_from,
+                    [email],
+                    #fail_silently=False
+                )
+            
+                messages.info(request, "Form submited")
+                return redirect('index')
+            except TimeoutError:
+                messages.info(request, "TimeoutError")
+                return redirect('index')
+                
+
+        messages.info(request, "Form not valid")
+        return redirect('index')
+    
+"""def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -59,40 +96,4 @@ def logout_user(request):
         logout(request)
         return redirect('login_user')
     return redirect('login_user')
-
-
-def index(request):
-    form = ContactForm()
-    return render(request, 'index.html', {"form": form})
-
-
-def sendmail(request):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            body = f"Message from: {name}\n{message}"
-            email_from = settings.EMAIL_HOST_USER
-            print(f"{email}\n{subject}\n{body}\n")
-            time.sleep(5)
-            try:
-                send_mail(
-                    subject,
-                    body,
-                    email_from,
-                    [email],
-                    #fail_silently=False
-                )
-            
-                messages.info(request, "Form submited")
-                return redirect('index')
-            except TimeoutError:
-                messages.info(request, "TimeoutError")
-                return redirect('index')
-                
-
-        messages.info(request, "Form not valid")
-        return redirect('index')
+"""
