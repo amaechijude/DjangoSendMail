@@ -36,10 +36,9 @@ def sendmail(request):
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-            body = f"Message from: {name}\n{message}"
-            email_from = "amaechijude178@gmail.com"#settings.EMAIL_HOST_USER
-            print(f"{email}\n{subject}\n{body}\n")
-            time.sleep(5)
+            body = f"Message from: {name}:: {email}\n\n{message}\n"
+            email_from = settings.EMAIL_HOST_USER
+            print(f"{body}")
             try:
                 send_mail(
                     subject,
@@ -49,7 +48,7 @@ def sendmail(request):
                     #fail_silently=False
                 )
             
-                messages.info(request, "Form submited")
+                messages.info(request, "Mail Sent")
                 return redirect('index')
             except TimeoutError:
                 messages.info(request, "TimeoutError")

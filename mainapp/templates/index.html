@@ -1,3 +1,9 @@
+{% for m in messages %}
+<center>
+    {{ m }}
+</center>
+{% endfor %}
+
 <form action="/sendmail" method="post">
     {% csrf_token %}
     {{ form.as_p }}
